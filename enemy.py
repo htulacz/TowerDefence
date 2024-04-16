@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.math import Vector2
 class Enemy(pg.sprite.Sprite):
     def __init__(self, waypoints, image):
+        #ZOBACZĆ CZEMU NIE DZIAŁA SUPER()
         pg.sprite.Sprite.__init__(self)
         self.speed = 2
         self.hp = 10

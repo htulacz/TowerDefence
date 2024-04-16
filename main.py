@@ -9,15 +9,13 @@ from towers.tower import Tower
 pg.init()
 clock = pg.time.Clock()
 
-
-screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
+screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL, c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
-run = True
 waypoints = [
-    (100,100),
-    (1100,100),
-    (100,700),
-    (1100,700)
+    (100, 100),
+    (1100, 100),
+    (100, 700),
+    (1100, 700)
 ]
 tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
 tower_image = pg.image.load("t1.png").convert_alpha()
@@ -33,7 +31,7 @@ enemy_group = pg.sprite.Group()
 tower_group = pg.sprite.Group()
 
 
-enemy = Enemy(waypoints,enemy_image)
+enemy = Enemy(waypoints, enemy_image)
 enemy_group.add(enemy)
 
 tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
@@ -43,7 +41,7 @@ def create_tower(click_pos):
     tower = Tower(click_pos, tower_sheet)
     tower_group.add(tower)
 
-
+run = True
 while run:
     clock.tick(c.FPS)
 
