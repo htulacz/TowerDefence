@@ -1,3 +1,5 @@
+import os
+
 import pygame as pg
 import consts as c
 from enemy import Enemy
@@ -24,7 +26,7 @@ tower_image = pg.image.load("t1.png").convert_alpha()
 enemy_image = pg.image.load("e1.png").convert_alpha()
 tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
-
+map_image = pg.image.load("assets/jez.jpg").convert_alpha()
 placing_towers = False
 selected_towers = None
 
@@ -36,19 +38,22 @@ tower_group = pg.sprite.Group()
 enemy = Enemy(waypoints,enemy_image)
 enemy_group.add(enemy)
 
+map = Map(map_image);
+
 tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
 cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
-
+# map.draw(screen)
 def create_tower(click_pos):
     tower = Tower(click_pos, tower_sheet)
     tower_group.add(tower)
+
 
 
 while run:
     clock.tick(c.FPS)
 
     screen.fill("grey100")
-
+    map.draw(screen)
     pg.draw.lines(screen, "grey0", False, waypoints)
 
     enemy_group.update()
