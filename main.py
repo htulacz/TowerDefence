@@ -1,9 +1,10 @@
+import json
 import os
-
+import _json
 import pygame as pg
 import consts as c
 from enemy import Enemy
-from map import Map
+from world import World
 from button import Button
 from towers.tower import Tower
 
@@ -15,18 +16,29 @@ clock = pg.time.Clock()
 screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
-waypoints = [
-    (100,100),
-    (1100,100),
-    (100,700),
-    (1100,700)
-]
+
 tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
 tower_image = pg.image.load("t1.png").convert_alpha()
-enemy_image = pg.image.load("e1.png").convert_alpha()
+enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
-map_image = pg.image.load("assets/jez.jpg").convert_alpha()
+map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
+enemies_images={
+    "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
+    "medium": pg.image.load("assets/enemies/e2.jpg").convert_alpha(),
+    "strong": pg.image.load("assets/enemies/e3.png").convert_alpha(),
+    "elite": pg.image.load("assets/enemies/e4.png").convert_alpha()
+}
+
+
+
+with open('assets/points/points1.tmj') as file:
+    world_data = json.load(file)
+
+world = World(world_data,map_image);
+world.process_data()
+world.process_enemies()
+
 placing_towers = False
 selected_towers = None
 
@@ -34,11 +46,11 @@ selected_towers = None
 enemy_group = pg.sprite.Group()
 tower_group = pg.sprite.Group()
 
+enemy_type="weak"
 
-enemy = Enemy(waypoints,enemy_image)
+enemy = Enemy(enemy_type,world.waypoints,enemies_images)
 enemy_group.add(enemy)
 
-map = Map(map_image);
 
 tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
 cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
@@ -53,8 +65,7 @@ while run:
     clock.tick(c.FPS)
 
     screen.fill("grey100")
-    map.draw(screen)
-    pg.draw.lines(screen, "grey0", False, waypoints)
+    world.draw(screen)
 
     enemy_group.update()
     for tower in tower_group:
