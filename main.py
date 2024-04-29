@@ -7,7 +7,7 @@ from enemy import Enemy
 from world import World
 from button import Button
 from towers.tower import Tower
-from towers.towerSpot import TowerSpot
+from towers.tower_spot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
@@ -21,6 +21,7 @@ tower_image = pg.image.load("t1.png").convert_alpha()
 enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
+upgrade_button_img = pg.image.load("upgradebutton.png").convert_alpha()
 map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
 tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
 enemies_images={
@@ -51,12 +52,13 @@ enemy_type="weak"
 enemy = Enemy(enemy_type,world.waypoints,enemies_images)
 enemy_group.add(enemy)
 
-tower_spots = [(92,230)]
+tower_spots = [(450,300)]
 for spot in tower_spots:
     spots_group.add(TowerSpot(spot, tower_spot_image))
 
 tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
 cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
+upgrade_button = Button(c.SCREEN_WIDTH + 30, 120, upgrade_button_img)
 # map.draw(screen)
 def create_tower(click_pos):
     tower = Tower(click_pos, tower_sheet)
@@ -68,6 +70,14 @@ def check_for_spot(click_pos):
             return spot.rect.center
     return False
 
+def select_tower(click_pos):
+    x = click_pos[0]
+    y = click_pos[1]
+    for tower in tower_group:
+        c = tower.rect.center
+        width = tower.rect.width
+        if x > c[0] - width and x < c[0] + width and y > c[1] - width and y < c[1] + width:
+            return tower
 
 while run:
 
@@ -77,6 +87,7 @@ while run:
     world.draw(screen)
     spots_group.draw(screen)
     enemy_group.update()
+    tower_group.update(enemy_group)
     for tower in tower_group:
         tower.draw(screen)
 
@@ -92,6 +103,10 @@ while run:
             screen.blit(tower_image, hover_rect)
         if cancel_button.draw(screen):
             placing_towers = False
+    if selected_towers:
+        if upgrade_button.draw(screen):
+            selected_towers.upgrade()
+
 
     for event in pg.event.get():
         if event.type == pg.QUIT:

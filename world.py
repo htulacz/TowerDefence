@@ -1,5 +1,6 @@
 import pygame as pg
 import os
+from towers.tower_spot import TowerSpot
 import pygame as pg
 from enemy_data import ENEMY_SPAWN_DATA
 # def draw(self, surface):
@@ -9,7 +10,7 @@ from enemy_data import ENEMY_SPAWN_DATA
 #     surface.blit(self.range_image, self.range_rect)
 #     surface.blit(self.image, self.rect)
 class World():
-    def __init__(self,data, map_image):
+    def __init__(self, data, map_image):
         self.level = 1
         self.waypoints = []
         self.level_data=data
