@@ -7,8 +7,7 @@ from enemy import Enemy
 from world import World
 from button import Button
 from towers.tower import Tower
-
-
+from towers.towerSpot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
@@ -23,6 +22,7 @@ enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
 map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
+tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
 enemies_images={
     "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
     "medium": pg.image.load("assets/enemies/e2.jpg").convert_alpha(),
@@ -35,7 +35,7 @@ enemies_images={
 with open('assets/points/points1.tmj') as file:
     world_data = json.load(file)
 
-world = World(world_data,map_image);
+world = World(world_data,map_image)
 world.process_data()
 world.process_enemies()
 
@@ -45,12 +45,15 @@ selected_towers = None
 
 enemy_group = pg.sprite.Group()
 tower_group = pg.sprite.Group()
-
+spots_group = pg.sprite.Group()
 enemy_type="weak"
 
 enemy = Enemy(enemy_type,world.waypoints,enemies_images)
 enemy_group.add(enemy)
 
+tower_spots = [(92,230)]
+for spot in tower_spots:
+    spots_group.add(TowerSpot(spot, tower_spot_image))
 
 tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
 cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
@@ -59,20 +62,25 @@ def create_tower(click_pos):
     tower = Tower(click_pos, tower_sheet)
     tower_group.add(tower)
 
+def check_for_spot(click_pos):
+    for spot in spots_group:
+        if (click_pos[0] - spot.x)**2 + (click_pos[1] - spot.y)**2 <= spot.radii**2:
+            return spot.rect.center
+    return False
 
 
 while run:
+
     clock.tick(c.FPS)
 
     screen.fill("grey100")
     world.draw(screen)
-
+    spots_group.draw(screen)
     enemy_group.update()
     for tower in tower_group:
         tower.draw(screen)
 
     enemy_group.draw(screen)
-    tower_group.update(enemy_group)
 
     if tower_button.draw(screen):
         placing_towers = True
@@ -91,8 +99,9 @@ while run:
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             click_pos = pg.mouse.get_pos()
             if click_pos[0] < c.SCREEN_WIDTH and click_pos[1] < c.SCREEN_HEIGTH:
-                if placing_towers:
-                    create_tower(click_pos)
+                actual_place = check_for_spot(click_pos)
+                if placing_towers and actual_place:
+                    create_tower(actual_place)
 
     pg.display.flip()
 
