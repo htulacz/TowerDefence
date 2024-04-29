@@ -2,6 +2,8 @@ import pygame as pg
 import os
 import pygame as pg
 from enemy_data import ENEMY_SPAWN_DATA
+import random
+
 # def draw(self, surface):
 #     self.image = pg.transform.rotate(self.original_image, self.angle - 90)
 #     self.rect = self.image.get_rect()
@@ -14,6 +16,8 @@ class World():
         self.waypoints = []
         self.level_data=data
         self.image = map_image
+        self.enemy_list = []
+        self.spawned_enemies = 0
 
     def process_data(self):
         for layer in self.level_data["layers"]:
@@ -29,9 +33,9 @@ class World():
         enemies = ENEMY_SPAWN_DATA[self.level - 1]
         for enemy_type in enemies:
             enemies_to_spawn = enemies[enemy_type]
-
-
-
+            for enemy in range(enemies_to_spawn):
+                self.enemy_list.append(enemy_type)
+        random.shuffle(self.enemy_list)
 
 
     def draw(self, surface):

@@ -6,8 +6,8 @@ from enemy_data import ENEMY_DATA
 class Enemy(pg.sprite.Sprite):
     def __init__(self, enemy_type, waypoints, images):
         pg.sprite.Sprite.__init__(self)
-        self.speed = 2
-        self.hp = 10
+        self.speed = ENEMY_DATA.get(enemy_type)["speed"]
+        self.hp = ENEMY_DATA.get(enemy_type)["health"]
         self.waypoints = waypoints
         self.pos = Vector2(self.waypoints[0])
         self.target_waypoint = 1

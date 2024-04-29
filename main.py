@@ -17,6 +17,8 @@ screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
 
+last_enemy_spawn = pg.time.get_ticks()
+
 tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
 tower_image = pg.image.load("t1.png").convert_alpha()
 enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
@@ -46,10 +48,9 @@ selected_towers = None
 enemy_group = pg.sprite.Group()
 tower_group = pg.sprite.Group()
 
-enemy_type="weak"
-
-enemy = Enemy(enemy_type,world.waypoints,enemies_images)
-enemy_group.add(enemy)
+#enemy_type="weak"
+#enemy = Enemy(enemy_type,world.waypoints,enemies_images)
+#enemy_group.add(enemy)
 
 
 tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
@@ -73,6 +74,16 @@ while run:
 
     enemy_group.draw(screen)
     tower_group.update(enemy_group)
+
+    #spawn enemies
+    if pg.time.get_ticks() - last_enemy_spawn > c.SPAWN_COOLDOWN:
+        # skonczylam 11;40
+        if world.spawned_enemies < len(world.enemy_list):
+            enemy_type=world.enemy_list[world.spawned_enemies]
+            enemy = Enemy(enemy_type,world.waypoints,enemies_images)
+            enemy_group.add(enemy)
+            world.spawned_enemies+=1
+            last_enemy_spawn=pg.time.get_ticks()
 
     if tower_button.draw(screen):
         placing_towers = True
