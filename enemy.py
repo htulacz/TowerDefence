@@ -4,8 +4,15 @@ import math
 from enemy_data import ENEMY_DATA
 
 class Enemy(pg.sprite.Sprite):
+<<<<<<<<< Temporary merge branch 1
     def __init__(self, enemy_type, waypoints, images):
+=========
+    def __init__(self, waypoints, image):
+        #ZOBACZĆ CZEMU NIE DZIAŁA SUPER()
+>>>>>>>>> Temporary merge branch 2
         pg.sprite.Sprite.__init__(self)
+        self.speed = 2
+        self.hp = 10
         self.waypoints = waypoints
         self.pos = Vector2(self.waypoints[0])
         self.target_waypoint = 1
