@@ -6,6 +6,7 @@ class Tower(pg.sprite.Sprite):
     def __init__(self,pos,sprite_sheet):
         pg.sprite.Sprite.__init__(self)
         self.level = 0
+        self.maxlevel = 3
         self.range = TOWER_DATA[self.level].get("range")
         self.cooldown = TOWER_DATA[self.level].get("cooldown")
         self.last_shot = pg.time.get_ticks()
@@ -67,7 +68,7 @@ class Tower(pg.sprite.Sprite):
             self.update_time = pg.time.get_ticks()
             self.frame_index = self.frame_index + 1 if self.frame_index + 1 < 4 else 0
             self.target = None
-    def upgrage(self):
+    def upgrade(self):
         self.level += 1
         self.range = TOWER_DATA[self.level].get("range")
         self.cooldown = TOWER_DATA[self.level].get("cooldown")

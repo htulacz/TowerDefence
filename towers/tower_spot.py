@@ -8,6 +8,7 @@ class TowerSpot(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = pos
         self.radii = self.rect.width / 2
+        self.occupied = False
 
 
     def draw(self,surface):

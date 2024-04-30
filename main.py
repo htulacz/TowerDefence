@@ -41,7 +41,7 @@ world.process_data()
 world.process_enemies()
 
 placing_towers = False
-selected_towers = None
+selected_tower = None
 
 
 enemy_group = pg.sprite.Group()
@@ -66,8 +66,10 @@ def create_tower(click_pos):
 
 def check_for_spot(click_pos):
     for spot in spots_group:
-        if (click_pos[0] - spot.x)**2 + (click_pos[1] - spot.y)**2 <= spot.radii**2:
-            return spot.rect.center
+        if not spot.occupied:
+            if (click_pos[0] - spot.x)**2 + (click_pos[1] - spot.y)**2 <= spot.radii**2:
+                spot.occupied = True
+                return spot.rect.center
     return False
 
 def select_tower(click_pos):
@@ -77,7 +79,12 @@ def select_tower(click_pos):
         c = tower.rect.center
         width = tower.rect.width
         if x > c[0] - width and x < c[0] + width and y > c[1] - width and y < c[1] + width:
+            tower.selected = True
             return tower
+
+def clear_selection():
+  for tower in tower_group:
+    tower.selected = False
 
 while run:
 
@@ -103,9 +110,9 @@ while run:
             screen.blit(tower_image, hover_rect)
         if cancel_button.draw(screen):
             placing_towers = False
-    if selected_towers:
+    if selected_tower and selected_tower.level < selected_tower.maxlevel:
         if upgrade_button.draw(screen):
-            selected_towers.upgrade()
+            selected_tower.upgrade()
 
 
     for event in pg.event.get():
@@ -115,8 +122,12 @@ while run:
             click_pos = pg.mouse.get_pos()
             if click_pos[0] < c.SCREEN_WIDTH and click_pos[1] < c.SCREEN_HEIGTH:
                 actual_place = check_for_spot(click_pos)
+                selected_tower = None
+                clear_selection()
                 if placing_towers and actual_place:
                     create_tower(actual_place)
+                else:
+                    selected_tower = select_tower(click_pos)
 
     pg.display.flip()
 
