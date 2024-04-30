@@ -14,7 +14,7 @@ class Button:
         if self.rect.collidepoint(pos):
             if pg.mouse.get_pressed()[0] == 1 and not self.clicked:
                 action = True
-                clicked = True
+                self.clicked = True
 
         if pg.mouse.get_pressed()[0] == 0:
             self.clicked = False
