@@ -1,15 +1,48 @@
 import pygame as pg
 import json
+from enemy import Enemy
+from world import World
 from button import Button
 import consts as c
 from runner import play
 
+from towers.tower import Tower
+from towers.tower_spot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
-screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL, c.SCREEN_HEIGTH))
+
+screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
+
+tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
+tower_image = pg.image.load("t1.png").convert_alpha()
+#enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
+tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
+cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
+map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
+tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
+enemies_images={
+    "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
+    "medium": pg.image.load("assets/enemies/e2.jpg").convert_alpha(),
+    "strong": pg.image.load("assets/enemies/e3.png").convert_alpha(),
+    "elite": pg.image.load("assets/enemies/e4.png").convert_alpha()
+}
+
+
+
+with open('assets/points/points1.tmj') as file:
+    world_data = json.load(file)
+
+world = World(world_data,map_image)
+world.process_data()
+world.process_enemies()
+
+last_enemy_spawn = pg.time.get_ticks()
+placing_towers = False
+selected_towers = None
+
 
 start_image = pg.image.load("assets/menustart.png")
 leaderboard_image = pg.image.load("assets/menuleaderboard.png")
@@ -24,6 +57,7 @@ leaderboard_is_open = False
 scoreboard_surface = None
 
 while run:
+
     clock.tick(c.FPS)
 
     screen.fill("grey100")
@@ -54,6 +88,12 @@ while run:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             run = False
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+            click_pos = pg.mouse.get_pos()
+            if click_pos[0] < c.SCREEN_WIDTH and click_pos[1] < c.SCREEN_HEIGTH:
+                actual_place = check_for_spot(click_pos)
+                if placing_towers and actual_place:
+                    create_tower(actual_place)
 
     pg.display.flip()
 pg.quit()

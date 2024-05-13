@@ -96,7 +96,7 @@ def play():
             screen.fill("grey100")
             world.draw(screen)
             spots_group.draw(screen)
-            enemy_group.update()
+            enemy_group.update(world)
             tower_group.update(enemy_group)
             for tower in tower_group:
                 tower.draw(screen)
