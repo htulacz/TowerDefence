@@ -38,3 +38,4 @@ while run:
             run = False
 
     pg.display.flip()
+pg.quit()
