@@ -3,7 +3,7 @@ import consts as c
 import math as m
 from towers.tower_data import TOWER_DATA
 class Tower(pg.sprite.Sprite):
-    def __init__(self,pos,sprite_sheet):
+    def __init__(self, pos, sprite_sheet):
         pg.sprite.Sprite.__init__(self)
         self.level = 0
         self.maxlevel = 3
