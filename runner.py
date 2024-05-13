@@ -1,11 +1,11 @@
 import json
-import os
-import _json
 import pygame as pg
 import consts as c
 from enemy import Enemy
 from world import World
 from button import Button
+# from towers.archer_tower import ArcherTower
+# from towers.bomb_tower import BombTower
 from towers.tower import Tower
 from towers.tower_spot import TowerSpot
 def play():
@@ -15,7 +15,6 @@ def play():
 
     screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
     pg.display.set_caption("Tower Defense")
-
     tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
     tower_image = pg.image.load("t1.png").convert_alpha()
     enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
@@ -59,7 +58,6 @@ def play():
     tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
     cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
     upgrade_button = Button(c.SCREEN_WIDTH + 30, 120, upgrade_button_img)
-# map.draw(screen)
     def create_tower(click_pos):
         tower = Tower(click_pos, tower_sheet)
         tower_group.add(tower)
@@ -90,8 +88,9 @@ def play():
         nonlocal run
         nonlocal placing_towers
         nonlocal selected_tower
+        score = 0
         while run:
-
+            score += 1
             clock.tick(c.FPS)
 
             screen.fill("grey100")
@@ -134,5 +133,10 @@ def play():
                             selected_tower = select_tower(click_pos)
 
             pg.display.flip()
-
+        with open("scores/scores.json", "r") as file:
+            existing_scores = json.load(file)
+        existing_scores.append(score)
+        existing_scores.sort(reverse=True)
+        with open("scores/scores.json", "w") as file:
+            json.dump(existing_scores,file)
     runner()

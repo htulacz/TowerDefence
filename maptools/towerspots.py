@@ -26,7 +26,6 @@ while running:
 
     pg.display.flip()
 
-# Zapisanie współrzędnych kliknięć do pliku JSON
 with open("../assets/towerspots/spots1.json", "w") as file:
     json.dump(click_coordinates, file)
 
