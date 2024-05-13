@@ -1,9 +1,5 @@
-import json
-import os
-import _json
 import pygame as pg
 import json
-import consts as c
 from enemy import Enemy
 from world import World
 from button import Button
@@ -11,7 +7,7 @@ import consts as c
 from runner import play
 
 from towers.tower import Tower
-from towers.towerSpot import TowerSpot
+from towers.tower_spot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
@@ -19,11 +15,10 @@ clock = pg.time.Clock()
 screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
-run = True
 
 tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
 tower_image = pg.image.load("t1.png").convert_alpha()
-enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
+#enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
 map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
@@ -44,6 +39,7 @@ world = World(world_data,map_image)
 world.process_data()
 world.process_enemies()
 
+last_enemy_spawn = pg.time.get_ticks()
 placing_towers = False
 selected_towers = None
 
@@ -54,14 +50,13 @@ exit_image = pg.image.load("assets/menuexit.png")
 enemy_group = pg.sprite.Group()
 tower_group = pg.sprite.Group()
 spots_group = pg.sprite.Group()
-enemy_type="weak"
+
 
 start_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH//3 - 150, start_image)
 leaderboard_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH//3 * 2 - 150, leaderboard_image)
 exit_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH - 150, exit_image)
 
-enemy = Enemy(enemy_type,world.waypoints,enemies_images)
-enemy_group.add(enemy)
+
 
 tower_spots = [(92,230)]
 for spot in tower_spots:
@@ -88,9 +83,18 @@ while run:
     screen.fill("grey100")
     world.draw(screen)
     spots_group.draw(screen)
-    enemy_group.update()
+    enemy_group.update(world)
+
+
     for tower in tower_group:
         tower.draw(screen)
+    if pg.time.get_ticks() - last_enemy_spawn > c.SPAWN_COOLDOWN:
+        if world.spawned_enemies < len(world.enemy_list):
+            enemy_type = world.enemy_list[world.spawned_enemies]
+            enemy = Enemy(enemy_type, world.waypoints, enemies_images)
+            enemy_group.add(enemy)
+            world.spawned_enemies +=1
+            last_enemy_spawn=pg.time.get_ticks()
 
     if start_button.draw(screen):
         play()

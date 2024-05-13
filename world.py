@@ -4,6 +4,7 @@ from towers.tower_spot import TowerSpot
 import pygame as pg
 from enemy_data import ENEMY_SPAWN_DATA
 import random
+import consts as c
 
 # def draw(self, surface):
 #     self.image = pg.transform.rotate(self.original_image, self.angle - 90)
@@ -13,7 +14,10 @@ import random
 #     surface.blit(self.image, self.rect)
 class World():
     def __init__(self, data, map_image):
+        self.health = c.HEALTH
+        self.money = c.MONEY
         self.level = 1
+        self.tile_map = []
         self.waypoints = []
         self.level_data=data
         self.image = map_image
