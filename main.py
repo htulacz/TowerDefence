@@ -88,12 +88,6 @@ while run:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             run = False
-        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-            click_pos = pg.mouse.get_pos()
-            if click_pos[0] < c.SCREEN_WIDTH and click_pos[1] < c.SCREEN_HEIGTH:
-                actual_place = check_for_spot(click_pos)
-                if placing_towers and actual_place:
-                    create_tower(actual_place)
 
     pg.display.flip()
 pg.quit()
