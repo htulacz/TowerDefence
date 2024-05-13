@@ -51,8 +51,8 @@ def play():
 
     enemy = Enemy(enemy_type,world.waypoints,enemies_images)
     enemy_group.add(enemy)
-
-    tower_spots = [(450,300)]
+    with open("assets/towerspots/spots1.json") as file:
+        tower_spots = json.load(file)
     for spot in tower_spots:
         spots_group.add(TowerSpot(spot, tower_spot_image))
 
