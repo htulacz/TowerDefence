@@ -47,61 +47,43 @@ selected_towers = None
 start_image = pg.image.load("assets/menustart.png")
 leaderboard_image = pg.image.load("assets/menuleaderboard.png")
 exit_image = pg.image.load("assets/menuexit.png")
-enemy_group = pg.sprite.Group()
-tower_group = pg.sprite.Group()
-spots_group = pg.sprite.Group()
-
-
+leave_image = pg.image.load("assets/menuleave.png")
 start_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH//3 - 150, start_image)
 leaderboard_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH//3 * 2 - 150, leaderboard_image)
 exit_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH - 150, exit_image)
+leave_button = Button(0, 0, leave_image)
 
-
-
-tower_spots = [(92,230)]
-for spot in tower_spots:
-    spots_group.add(TowerSpot(spot, tower_spot_image))
-
-tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
-cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
-# map.draw(screen)
-def create_tower(click_pos):
-    tower = Tower(click_pos, tower_sheet)
-    tower_group.add(tower)
-
-def check_for_spot(click_pos):
-    for spot in spots_group:
-        if (click_pos[0] - spot.x)**2 + (click_pos[1] - spot.y)**2 <= spot.radii**2:
-            return spot.rect.center
-    return False
-
+leaderboard_is_open = False
+scoreboard_surface = None
 
 while run:
 
     clock.tick(c.FPS)
 
     screen.fill("grey100")
-    world.draw(screen)
-    spots_group.draw(screen)
-    enemy_group.update(world)
-
-
-    for tower in tower_group:
-        tower.draw(screen)
-    if pg.time.get_ticks() - last_enemy_spawn > c.SPAWN_COOLDOWN:
-        if world.spawned_enemies < len(world.enemy_list):
-            enemy_type = world.enemy_list[world.spawned_enemies]
-            enemy = Enemy(enemy_type, world.waypoints, enemies_images)
-            enemy_group.add(enemy)
-            world.spawned_enemies +=1
-            last_enemy_spawn=pg.time.get_ticks()
-
-    if start_button.draw(screen):
+    if not leaderboard_is_open and start_button.draw(screen):
         play()
-    if leaderboard_button.draw(screen):
-        print("todo")
-    if exit_button.draw(screen):
+    if not leaderboard_is_open and leaderboard_button.draw(screen):
+        leaderboard_is_open = True
+        with open("scores/scores.json", "r") as file:
+            scoreboard = json.load(file)
+        scoreboard_surface = pg.Surface((c.SCREEN_WIDTH, c.SCREEN_HEIGTH))
+        scoreboard_surface.fill((255, 255, 255))
+        font = pg.font.Font(None, 36)
+        y = 50
+        for s in scoreboard:
+            text = font.render(str(s), True, (0,0,0))
+            text_rect = text.get_rect()
+            text_rect.center = (c.SCREEN_WIDTH // 2, y)
+            y += 40
+            scoreboard_surface.blit(text, text_rect)
+    if not leaderboard_is_open and exit_button.draw(screen):
         run = False
+
+    if leaderboard_is_open:
+        if leave_button.draw(scoreboard_surface):
+            leaderboard_is_open = False
+        screen.blit(scoreboard_surface, (0, 0))
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
