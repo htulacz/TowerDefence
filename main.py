@@ -3,11 +3,11 @@ import json
 from button import Button
 import consts as c
 from runner import play
+
 pg.init()
 clock = pg.time.Clock()
 
-
-screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
+screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL, c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
 
@@ -20,6 +20,7 @@ leaderboard_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH//3 * 2 - 150, lea
 exit_button = Button(c.SCREEN_WIDTH//2, c.SCREEN_HEIGTH - 150, exit_image)
 
 
+run = True
 while run:
     clock.tick(c.FPS)
 
