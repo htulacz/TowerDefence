@@ -1,6 +1,7 @@
 import json
 import pygame as pg
 import consts as c
+from TowerDefence.world import World
 from enemy import Enemy
 from world import World
 from button import Button
@@ -12,18 +13,32 @@ def play():
     pg.init()
     clock = pg.time.Clock()
     run = True
-
+    print("1")
     screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
     pg.display.set_caption("Tower Defense")
+    ###########
     tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
     tower_image = pg.image.load("t1.png").convert_alpha()
-    enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
+    #enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
     tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
     cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
     upgrade_button_img = pg.image.load("upgradebutton.png").convert_alpha()
-    map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
+   # map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
     tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
-    enemies_images={
+
+
+    map_images={
+        "1" : pg.image.load("assets/maps/map1.png").convert_alpha(),
+        "2" : pg.image.load("assets/maps/map2.jpeg").convert_alpha(),
+        "3" : pg.image.load("assets/maps/map3.jpg").convert_alpha(),
+        "4" : pg.image.load("assets/maps/map4.jpg").convert_alpha(),
+        "5" : pg.image.load("assets/maps/map5.png").convert_alpha(),
+        "6" : pg.image.load("assets/maps/map6.png").convert_alpha(),
+        "7" : pg.image.load("assets/maps/map7.png").convert_alpha(),
+        "8" : pg.image.load("assets/maps/map8.png").convert_alpha()
+    }
+
+    enemy_images={
         "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
         "medium": pg.image.load("assets/enemies/e2.jpg").convert_alpha(),
         "strong": pg.image.load("assets/enemies/e3.png").convert_alpha(),
@@ -35,9 +50,15 @@ def play():
     with open('assets/points/points1.tmj') as file:
         world_data = json.load(file)
 
-    world = World(world_data,map_image)
+    world: World = World(world_data,map_images)
     world.process_data()
     world.process_enemies()
+    text_font = pg.font.SysFont("Consolas", 24, bold=True)
+    large_font = pg.font.SysFont("Consolas", 36)
+
+    def draw_text(text, font, text_col, x, y):
+        img = font.render(text, True, text_col)
+        screen.blit(img, (x, y))
 
     placing_towers = False
     selected_tower = None
@@ -46,10 +67,8 @@ def play():
     enemy_group = pg.sprite.Group()
     tower_group = pg.sprite.Group()
     spots_group = pg.sprite.Group()
-    enemy_type="weak"
 
-    enemy = Enemy(enemy_type,world.waypoints,enemies_images)
-    enemy_group.add(enemy)
+
     with open("assets/towerspots/spots1.json") as file:
         tower_spots = json.load(file)
     for spot in tower_spots:
@@ -88,20 +107,52 @@ def play():
         nonlocal run
         nonlocal placing_towers
         nonlocal selected_tower
+        last_enemy_spawn = pg.time.get_ticks()
         score = 0
         while run:
+
             score += 1
             clock.tick(c.FPS)
-
             screen.fill("grey100")
             world.draw(screen)
+            enemy_group.draw(screen)
             spots_group.draw(screen)
             enemy_group.update(world)
             tower_group.update(enemy_group)
             for tower in tower_group:
                 tower.draw(screen)
+            draw_text("health:", text_font, "grey100", 0, 0)
+            draw_text(str(world.health), text_font, "grey100", 0, 30)
+            draw_text("money:", text_font, "grey100", 0, 60)
+            draw_text(str(world.money), text_font, "grey100", 0, 90)
+            draw_text("level:", text_font, "grey100", 0, 120)
+            draw_text(str(world.level), text_font, "grey100", 0, 150)
 
             enemy_group.draw(screen)
+            if pg.time.get_ticks() - last_enemy_spawn > c.SPAWN_COOLDOWN:
+                if world.spawned_enemies < len(world.enemy_list):
+                    enemy_type = world.enemy_list[world.spawned_enemies]
+                    enemy = Enemy(enemy_type, world.waypoints, enemy_images)
+                    enemy_group.add(enemy)
+                    world.spawned_enemies += 1
+                    last_enemy_spawn = pg.time.get_ticks()
+            if world.spawned_enemies == len(world.enemy_list) and pg.time.get_ticks() - last_enemy_spawn > 20000:
+                world.level+=1
+                last_enemy_spawn = pg.time.get_ticks()
+                world.enemy_list=[]
+                with open(f"assets/points/points{world.level}.tmj") as file:
+                    world_data = json.load(file)
+                    print("2")
+                world.level_data=world_data
+                world.waypoints = []
+                world.process_data()
+                world.process_enemies()
+                world.orginal_image=map_images.get(str(world.level))
+                world.image = pg.transform.rotate(world.orginal_image, world.angle)
+                world.spawned_enemies=0
+
+                #with open('assets/points/points1.tmj') as file:
+                 #   world_data = json.load(file)
 
             if tower_button.draw(screen):
                 placing_towers = True

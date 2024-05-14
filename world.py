@@ -13,18 +13,27 @@ import consts as c
 #     surface.blit(self.range_image, self.range_rect)
 #     surface.blit(self.image, self.rect)
 class World():
-    def __init__(self, data, map_image):
+    spawned_enemies: int
+
+    def __init__(self, data, map_images={}):
+        pg.sprite.Sprite.__init__(self)
+        """
+        @type map_images: object
+        """
         self.health = c.HEALTH
         self.money = c.MONEY
         self.level = 1
         self.tile_map = []
         self.waypoints = []
         self.level_data=data
-        self.image = map_image
+        self.angle = 0
+        self.orginal_image = map_images.get(str(self.level))
+        self.image = pg.transform.rotate(self.orginal_image, self.angle)
         self.enemy_list = []
         self.spawned_enemies = 0
 
     def process_data(self):
+
         for layer in self.level_data["layers"]:
             if layer["name"] == "waypoints":
                 for obj in layer["objects"]:
@@ -35,6 +44,7 @@ class World():
                         self.waypoints.append((temp_x,temp_y))
 
     def process_enemies(self):
+        print(self.level)
         enemies = ENEMY_SPAWN_DATA[self.level - 1]
         for enemy_type in enemies:
             enemies_to_spawn = enemies[enemy_type]

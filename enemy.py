@@ -5,7 +5,7 @@ from enemy_data import ENEMY_DATA
 import consts as c
 
 class Enemy(pg.sprite.Sprite):
-    def __init__(self,enemy_type, waypoints, image):
+    def __init__(self,enemy_type, waypoints, images):
         #ZOBACZĆ CZEMU NIE DZIAŁA SUPER()
         pg.sprite.Sprite.__init__(self)
         self.speed = 2
@@ -16,7 +16,7 @@ class Enemy(pg.sprite.Sprite):
         self.health = ENEMY_DATA.get(enemy_type)["health"]
         self.speed = ENEMY_DATA.get(enemy_type)["speed"]
         self.angle = 0
-        self.original_image = image.get(enemy_type)
+        self.original_image = images.get(enemy_type)
         self.image = pg.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
