@@ -5,7 +5,7 @@ from TowerDefence.world import World
 from enemy import Enemy
 from world import World
 from button import Button
-# from towers.archer_tower import ArcherTower
+from towers.archer_tower import ArcherTower
 # from towers.bomb_tower import BombTower
 from towers.tower import Tower
 from towers.tower_spot import TowerSpot
@@ -78,7 +78,7 @@ def play():
     cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
     upgrade_button = Button(c.SCREEN_WIDTH + 30, 120, upgrade_button_img)
     def create_tower(click_pos):
-        tower = Tower(click_pos, tower_sheet)
+        tower = ArcherTower(click_pos, tower_sheet)
         tower_group.add(tower)
 
     def check_for_spot(click_pos):
