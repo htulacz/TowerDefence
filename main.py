@@ -35,7 +35,7 @@ enemies_images={
 with open('assets/points/points1.tmj') as file:
     world_data = json.load(file)
 
-world = World(world_data,map_image)
+world = World(world_data, map_image)
 world.process_data()
 world.process_enemies()
 
