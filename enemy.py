@@ -20,6 +20,7 @@ class Enemy(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+        self.reached_goal = False
 
     def update(self, world):
         self.move(world)
@@ -52,6 +53,7 @@ class Enemy(pg.sprite.Sprite):
             self.movement = self.target - self.pos
         else:
             # enemy has reached the end of the path
+            self.reached_goal = True
             self.kill()
             world.health -= 1
 

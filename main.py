@@ -11,13 +11,17 @@ from towers.tower_spot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
+# def draw_next_button_text(button, text, font, color):
+#     text_img = font.render(text, True, color)
+#     text_rect = text_img.get_rect(center=(button.rect.x + button.rect.width // 2, button.rect.y + button.rect.height // 2))
+#     screen.blit(text_img, text_rect)
 
 screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
 
 tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
-tower_image = pg.image.load("t1.png").convert_alpha()
+tower_image = pg.image.load("assets/towers/tower1.png").convert_alpha()
 #enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
