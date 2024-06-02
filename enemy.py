@@ -22,6 +22,7 @@ class Enemy(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.reached_goal = False
 
+
     def update(self, world):
         self.move(world)
         self.rotate()
