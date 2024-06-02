@@ -11,10 +11,6 @@ from towers.tower_spot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
-# def draw_next_button_text(button, text, font, color):
-#     text_img = font.render(text, True, color)
-#     text_rect = text_img.get_rect(center=(button.rect.x + button.rect.width // 2, button.rect.y + button.rect.height // 2))
-#     screen.blit(text_img, text_rect)
 
 screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
@@ -27,29 +23,7 @@ tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
 map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
 tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
-# enemies_images={
-#     "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
-#     "medium": pg.image.load("assets/enemies/e2.jpg").convert_alpha(),
-#     "strong": pg.image.load("assets/enemies/e3.png").convert_alpha(),
-#     "elite": pg.image.load("assets/enemies/e4.png").convert_alpha()
-# }
-#
-#
-# map_images={
-#         "1" : pg.image.load("assets/maps/map2.jpeg").convert_alpha(),
-#         "2" : pg.image.load("assets/maps/map2.jpeg").convert_alpha(),
-#         "3" : pg.image.load("assets/maps/map3.jpg").convert_alpha(),
-#         "4" : pg.image.load("assets/maps/map4.jpg").convert_alpha(),
-#         "5" : pg.image.load("assets/maps/map5.png").convert_alpha(),
-#         "6" : pg.image.load("assets/maps/map6.png").convert_alpha(),
-#         "7" : pg.image.load("assets/maps/map7.png").convert_alpha(),
-#         "8" : pg.image.load("assets/maps/map8.png").convert_alpha()
-#     }
-# with open('assets/points/points1.tmj') as file:
-#     world_data = json.load(file)
 
-# world = World(world_data,map_images)
-# world.process_data()
 # world.process_enemies()
 level_started=False
 #last_enemy_spawn = pg.time.get_ticks()
