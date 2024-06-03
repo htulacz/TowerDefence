@@ -6,12 +6,6 @@ from enemy_data import ENEMY_SPAWN_DATA
 import random
 import consts as c
 
-# def draw(self, surface):
-#     self.image = pg.transform.rotate(self.original_image, self.angle - 90)
-#     self.rect = self.image.get_rect()
-#     self.rect.center = (self.x, self.y)
-#     surface.blit(self.range_image, self.range_rect)
-#     surface.blit(self.image, self.rect)
 class World():
     spawned_enemies: int
 

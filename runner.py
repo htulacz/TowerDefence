@@ -1,5 +1,8 @@
 
 import json
+import random
+import time
+
 import pygame as pg
 import consts as c
 from world import World
@@ -9,6 +12,7 @@ from towers.archer_tower import ArcherTower
 # from towers.bomb_tower import BombTower
 from towers.tower import Tower
 from towers.tower_spot import TowerSpot
+
 
 def play():
     pg.init()
@@ -37,6 +41,17 @@ def play():
         "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
         "medium": pg.image.load("assets/enemies/e2.png").convert_alpha(),
         "strong": pg.image.load("assets/enemies/e3.png").convert_alpha(),
+        "elite": pg.image.load("assets/enemies/e4.png").convert_alpha(),
+        "super": pg.image.load("assets/enemies/e5.png").convert_alpha(),
+        "boss": pg.image.load("assets/enemies/e6.png").convert_alpha(),
+        "shadow_super":  pg.image.load("assets/enemies/shadow_super.png").convert_alpha(),
+        "shadow_boss": pg.image.load("assets/enemies/shadow_boss.png").convert_alpha()
+    }
+
+    images_features= {
+        "weak": pg.image.load("assets/enemies/e1.png").convert_alpha(),
+        "medium": pg.image.load("assets/enemies/e2.png").convert_alpha(),
+        "strong": pg.image.load("assets/enemies/e3_shield.png").convert_alpha(),
         "elite": pg.image.load("assets/enemies/e4.png").convert_alpha(),
         "super": pg.image.load("assets/enemies/e5.png").convert_alpha(),
         "boss": pg.image.load("assets/enemies/e6.png").convert_alpha()
@@ -125,6 +140,52 @@ def play():
             tower_group.update(enemy_group)
             for tower in tower_group:
                 tower.draw(screen)
+
+            for enemy in enemy_group:
+                if(enemy.health - 0.1 >0) and random.randint(0, 1000) == 0:
+                    enemy.health=enemy.health-0.1
+
+##### tu chyba maja byc fetury enemies
+            #shadow = Enemy("super", enemy.waypoints, enemy_images, images_features)
+            shadow=None
+            for enemy in enemy_group:
+                match enemy.enemy_type:
+                    case "weak":
+                        enemy.weak_function()
+                        #print("plonie do konca i obrazenia ma x2")
+                    case "medium":
+                        #print("You chose a banana.")
+                         continue
+                    case "strong":
+                        enemy.strong_function()
+                        #print("ma shield na poczatku")
+                    case "elite":
+                        continue
+                    case "super":
+                        if enemy.health != enemy.last_health and not enemy.is_shadow:
+                            shadow =Enemy("super",enemy.waypoints,enemy_images,images_features)
+                            shadow.waypoints=enemy.waypoints
+                            shadow.image = pg.image.load("assets/enemies/shadow_super.png").convert_alpha()
+                            shadow.original_image=pg.image.load("assets/enemies/shadow_super.png").convert_alpha()
+                            shadow.health=0.1*enemy.health
+                            shadow.is_shadow=True
+                            enemy.last_health = enemy.health
+                       # print("jak zostanie trafiony to tworza sie jego cienie z 10% zdrowia")
+                    case "boss":
+                        if enemy.health != enemy.last_health and not enemy.is_shadow:
+                            shadow = Enemy("boss", enemy.waypoints, enemy_images, images_features)
+                            shadow.waypoints = enemy.waypoints
+                            shadow.image = pg.image.load("assets/enemies/shadow_boss.png").convert_alpha()
+                            shadow.original_image = pg.image.load("assets/enemies/shadow_boss.png").convert_alpha()
+                            shadow.health = 0.3 * enemy.health
+                            shadow.is_shadow = True
+                            enemy.last_health = enemy.health
+
+            if(shadow is not None):
+                enemy_group.add(shadow)
+                shadow = None
+
+
             draw_text("health:", text_font, "grey100", 0, 0)
             draw_text(str(world.health), text_font, "grey100", 0, 30)
             draw_text("money:", text_font, "grey100", 0, 60)
@@ -135,7 +196,7 @@ def play():
                 if pg.time.get_ticks() - last_enemy_spawn > c.SPAWN_COOLDOWN:
                     if world.spawned_enemies < len(world.enemy_list):
                         enemy_type = world.enemy_list[world.spawned_enemies]
-                        enemy = Enemy(enemy_type, world.waypoints, enemy_images)
+                        enemy = Enemy(enemy_type, world.waypoints, enemy_images,images_features)
                         enemy_group.add(enemy)
                         world.spawned_enemies += 1
                         last_enemy_spawn = pg.time.get_ticks()
@@ -151,6 +212,12 @@ def play():
                 world.enemy_list = []
                 if world.level % 6 == 1:
                     current_map = (world.level - 1) // 6 + 1
+                    if(current_map==5):
+                        run = False
+
+                        current_map == 4
+
+                # co do huja
                 with open(f"assets/points/points{current_map}.tmj") as file:
                     world_data = json.load(file)
                 world.level_data = world_data
@@ -161,6 +228,9 @@ def play():
                 world.image = pg.transform.rotate(world.original_image, world.angle)
                 world.spawned_enemies = 0
 
+            if (current_map == 5):
+                run = False
+                current_map == 4
 
             if next_level_ready:
                 draw_text("Next Level Available", large_font, "red", c.SCREEN_WIDTH // 2, c.SCREEN_HEIGTH // 2)
@@ -170,16 +240,18 @@ def play():
                     world.enemy_list = []
                     if world.level % 6 == 1:
                         current_map = (world.level - 1) // 6 + 1
-                    with open(f"assets/points/points{current_map}.tmj") as file:
-                        world_data = json.load(file)
-                    world.level_data = world_data
-                    world.waypoints = []
-                    world.process_data()
-                    world.process_enemies()
-                    world.original_image = map_images.get(str(current_map))
-                    world.image = pg.transform.rotate(world.original_image, world.angle)
-                    world.spawned_enemies = 0
-                draw_next_button_text(next_level_button, "Next Level", text_font, "black")
+
+                    if(current_map is not 5):
+                        with open(f"assets/points/points{current_map}.tmj") as file:
+                            world_data = json.load(file)
+                        world.level_data = world_data
+                        world.waypoints = []
+                        world.process_data()
+                        world.process_enemies()
+                        world.original_image = map_images.get(str(current_map))
+                        world.image = pg.transform.rotate(world.original_image, world.angle)
+                        world.spawned_enemies = 0
+                    draw_next_button_text(next_level_button, "Next Level", text_font, "black")
 
             if tower_button.draw(screen):
                 placing_towers = True

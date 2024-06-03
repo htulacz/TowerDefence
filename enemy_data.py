@@ -161,7 +161,68 @@ ENEMY_SPAWN_DATA = [
     "elite": 5,
     "super": 20,
     "boss" : 20
+  },
+
+{
+    #19
+    "weak": 10,
+    "medium": 10,
+    "strong": 5,
+    "elite": 15,
+    "super": 20,
+    "boss" : 20
+  },
+
+{
+    #20
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 5,
+    "super": 30,
+    "boss" : 25
+  },
+
+{
+    #21
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 35,
+    "super": 40,
+    "boss" : 25
+  },
+
+{
+    #22
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 15,
+    "super": 30,
+    "boss" : 30
+  },
+
+{
+    #23
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 5,
+    "super": 30,
+    "boss" : 25
+  },
+
+  {
+    #24
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 5,
+    "super": 30,
+    "boss" : 25
   }
+
 ]
 
 
