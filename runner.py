@@ -1,16 +1,14 @@
 
 import json
 import random
-import time
 
 import pygame as pg
 import consts as c
 from world import World
 from enemy import Enemy
-from button import Button
+from buttons.button import Button
 from towers.archer_tower import ArcherTower
 # from towers.bomb_tower import BombTower
-from towers.tower import Tower
 from towers.tower_spot import TowerSpot
 
 
@@ -21,20 +19,21 @@ def play():
     screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL, c.SCREEN_HEIGTH))
     pg.display.set_caption("Tower Defense")
 
-    tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
+    tower_sheet = pg.image.load("buttons/toweranimation.png").convert_alpha()
     tower_image = pg.image.load("assets/towers/tower1.png").convert_alpha()
-    tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
-    cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
-    upgrade_button_img = pg.image.load("upgradebutton.png").convert_alpha()
+    tower_button_img = pg.image.load("buttons/towerbutton.png").convert_alpha()
+    cancel_button_img = pg.image.load("buttons/cancelbutton.png").convert_alpha()
+    upgrade_button_img = pg.image.load("buttons/upgradebutton.png").convert_alpha()
     tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
-    next_lvl_image= pg.image.load("upgradebutton.png").convert_alpha()
-    next_lvl_brute_force_img = pg.image.load("nextlevelbutton.png").convert_alpha()
+    next_lvl_image= pg.image.load("buttons/nastepny.png").convert_alpha()
+    next_lvl_brute_force_img = pg.image.load("buttons/nextlevelbutton.png").convert_alpha()
+    money_button = pg.image.load("buttons/moneybutton.png").convert_alpha()
 
     map_images = {
         "1": pg.image.load("assets/maps/map1.png").convert_alpha(),
         "2": pg.image.load("assets/maps/map2.png").convert_alpha(),
         "3": pg.image.load("assets/maps/map3.png").convert_alpha(),
-        "4": pg.image.load("assets/maps/map4.png").convert_alpha(),
+        "4": pg.image.load("assets/maps/map4.png").convert_alpha()
     }
 
     enemy_images = {
@@ -91,9 +90,11 @@ def play():
     tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
     cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
     upgrade_button = Button(c.SCREEN_WIDTH + 30, 160, upgrade_button_img)
-    next_level_button = Button(c.SCREEN_WIDTH + 30, 200, next_lvl_image)  # **Nowy przycisk**
-    next_lvl_brute_force_button = Button(c.SCREEN_WIDTH + 30, 240,
+    next_level_button = Button(c.SCREEN_WIDTH + 30, 180, next_lvl_image)  # **Nowy przycisk**
+    next_lvl_brute_force_button = Button(c.SCREEN_WIDTH + 30, 300,
                                          next_lvl_brute_force_img)  # **Przycisk Brutalnej Siły**
+    money_button = Button(c.SCREEN_WIDTH + 30, 400,
+                                         money_button)  # **Przycisk Brutalnej Siły**
     def create_tower(click_pos):
         tower = ArcherTower(click_pos, tower_sheet)
         tower_group.add(tower)
@@ -120,6 +121,16 @@ def play():
         for tower in tower_group:
             tower.selected = False
 
+    def shadows_spawner(enemy, x):
+        if enemy.health != enemy.last_health and not enemy.is_shadow:
+            shadow = Enemy("super", enemy.waypoints, enemy_images, images_features)
+            shadow.waypoints = enemy.waypoints
+            shadow.image = pg.image.load("assets/enemies/shadow_super.png").convert_alpha()
+            shadow.original_image = pg.image.load("assets/enemies/shadow_super.png").convert_alpha()
+            shadow.health = x * enemy.health
+            shadow.is_shadow = True
+            enemy.last_health = enemy.health
+
     def runner():
         nonlocal run
         nonlocal placing_towers
@@ -128,7 +139,7 @@ def play():
         score = 0
         next_level_ready = False  # **Flaga gotowości do następnego poziomu**
         current_map = 1  # **Zmiana mapy co 6 poziomów**
-
+        money = False
         while run:
             score += 1
             clock.tick(c.FPS)
@@ -141,49 +152,62 @@ def play():
             for tower in tower_group:
                 tower.draw(screen)
 
+
+## su
             for enemy in enemy_group:
                 if(enemy.health - 0.1 >0) and random.randint(0, 1000) == 0:
                     enemy.health=enemy.health-0.1
 
+            if(money) and money_count <100:
+                money_count=money_count+1
+                for enemy in enemy_group:
+                    match enemy.enemy_type:
+                        case "weak":
+                            enemy.image = pg.image.load("assets/enemies/e1_cash.png").convert_alpha()
+                            enemy.money = enemy.money * 2
+                        case "medium":
+                            enemy.image=pg.image.load("assets/enemies/e2_cash.png").convert_alpha()
+                            enemy.money = enemy.money * 2
+                        case "strong":
+                            enemy.image = pg.image.load("assets/enemies/e3_cash.png").convert_alpha()
+                            #enemy.orginal_image =pg.image.load("assets/enemies/e3_cash.png").convert_alpha()
+                            enemy.money = enemy.money * 2
+                        case "elite":
+                            enemy.image = pg.image.load("assets/enemies/e4_cash.png").convert_alpha()
+                            enemy.money = enemy.money * 2
+                        case "super":
+                            enemy.image = pg.image.load("assets/enemies/e5_cash.png").convert_alpha()
+                            enemy.money = enemy.money * 2
+                        case "boss":
+                            enemy.image = pg.image.load("assets/enemies/e6_cash.png").convert_alpha()
+                            enemy.money = enemy.money * 2
 ##### tu chyba maja byc fetury enemies
             #shadow = Enemy("super", enemy.waypoints, enemy_images, images_features)
             shadow=None
-            for enemy in enemy_group:
-                match enemy.enemy_type:
-                    case "weak":
-                        enemy.weak_function()
-                        #print("plonie do konca i obrazenia ma x2")
-                    case "medium":
-                        #print("You chose a banana.")
-                         continue
-                    case "strong":
-                        enemy.strong_function()
-                        #print("ma shield na poczatku")
-                    case "elite":
-                        continue
-                    case "super":
-                        if enemy.health != enemy.last_health and not enemy.is_shadow:
-                            shadow =Enemy("super",enemy.waypoints,enemy_images,images_features)
-                            shadow.waypoints=enemy.waypoints
-                            shadow.image = pg.image.load("assets/enemies/shadow_super.png").convert_alpha()
-                            shadow.original_image=pg.image.load("assets/enemies/shadow_super.png").convert_alpha()
-                            shadow.health=0.1*enemy.health
-                            shadow.is_shadow=True
-                            enemy.last_health = enemy.health
-                       # print("jak zostanie trafiony to tworza sie jego cienie z 10% zdrowia")
-                    case "boss":
-                        if enemy.health != enemy.last_health and not enemy.is_shadow:
-                            shadow = Enemy("boss", enemy.waypoints, enemy_images, images_features)
-                            shadow.waypoints = enemy.waypoints
-                            shadow.image = pg.image.load("assets/enemies/shadow_boss.png").convert_alpha()
-                            shadow.original_image = pg.image.load("assets/enemies/shadow_boss.png").convert_alpha()
-                            shadow.health = 0.3 * enemy.health
-                            shadow.is_shadow = True
-                            enemy.last_health = enemy.health
+            if not money:
+                for enemy in enemy_group:
+                    match enemy.enemy_type:
+                        case "weak":
+                            enemy.weak_function()
+                            #print("plonie do konca i obrazenia ma x2")
+                        case "medium":
+                            enemy.medium_function()
+                            # jak zostana trafione to zwalniaja
+                        case "strong":
+                            enemy.strong_function()
+                            #print("ma shield na poczatku ++")
+                        case "elite":
+                            continue
+                        case "super":
+                            shadows_spawner(enemy,0.1)
+                           # print("jak zostanie trafiony to tworza sie jego cienie z 10% zdrowia")
+                        case "boss":
+                            shadows_spawner(enemy,0.3)
+                        # print("jak zostanie trafiony to tworza sie jego cienie z 30% zdrowia")
 
-            if(shadow is not None):
-                enemy_group.add(shadow)
-                shadow = None
+                if(shadow is not None):
+                    enemy_group.add(shadow)
+                    shadow = None
 
 
             draw_text("health:", text_font, "grey100", 0, 0)
@@ -204,6 +228,24 @@ def play():
                 all_enemies_reached = all(enemy.reached_goal for enemy in enemy_group)
                 if world.spawned_enemies == len(world.enemy_list) and all_enemies_reached:
                     next_level_ready = True
+            if money_button.draw(screen):
+                money = True
+                money_count = 0
+                for enemy in enemy_group:
+                    match enemy.enemy_type:
+                        case "weak":
+                            enemy.image = pg.image.load("assets/enemies/e1_cash.png").convert_alpha()
+                        case "medium":
+                            enemy.image=pg.image.load("assets/enemies/e2_cash.png").convert_alpha()
+                        case "strong":
+                            enemy.image = pg.image.load("assets/enemies/e3_cash.png").convert_alpha()
+                            enemy.orginal_image =pg.image.load("assets/enemies/e3_cash.png").convert_alpha()
+                        case "elite":
+                            enemy.image = pg.image.load("assets/enemies/e4_cash.png").convert_alpha()
+                        case "super":
+                            enemy.image = pg.image.load("assets/enemies/e5_cash.png").convert_alpha()
+                        case "boss":
+                            enemy.image = pg.image.load("assets/enemies/e6_cash.png").convert_alpha()
 
             if next_lvl_brute_force_button.draw(screen):  # **Rysowanie i obsługa przycisku Brutalnej Siły**
                 enemy_group.empty()  # Usunięcie wszystkich obecnych wrogów
@@ -240,8 +282,8 @@ def play():
                     world.enemy_list = []
                     if world.level % 6 == 1:
                         current_map = (world.level - 1) // 6 + 1
-
-                    if(current_map is not 5):
+                    money_count =0
+                    if(current_map != 5):
                         with open(f"assets/points/points{current_map}.tmj") as file:
                             world_data = json.load(file)
                         world.level_data = world_data
@@ -251,6 +293,8 @@ def play():
                         world.original_image = map_images.get(str(current_map))
                         world.image = pg.transform.rotate(world.original_image, world.angle)
                         world.spawned_enemies = 0
+                        money_count=0
+                        money=False
                     draw_next_button_text(next_level_button, "Next Level", text_font, "black")
 
             if tower_button.draw(screen):

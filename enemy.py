@@ -3,21 +3,22 @@ from pygame.math import Vector2
 import math
 
 
-from enemy_data import ENEMY_DATA
-import consts as c
+from assets.enemies.enemy_data import ENEMY_DATA
+
 
 class Enemy(pg.sprite.Sprite):
     def __init__(self,enemy_type, waypoints, images, images_features):
         #ZOBACZĆ CZEMU NIE DZIAŁA SUPER()
 
         pg.sprite.Sprite.__init__(self)
-        self.speed = 2
+
         self.waypoints = waypoints
         self.pos = Vector2(self.waypoints[0])
         self.target_waypoint = 1
         self.max_health=ENEMY_DATA.get(enemy_type)["health"]
         self.health = ENEMY_DATA.get(enemy_type)["health"]
         self.speed = ENEMY_DATA.get(enemy_type)["speed"]
+        self.money = ENEMY_DATA.get(enemy_type)["money"]
         self.angle = 0
         self.original_image = images.get(enemy_type)
         self.image = pg.transform.rotate(self.original_image, self.angle)
@@ -71,37 +72,38 @@ class Enemy(pg.sprite.Sprite):
 
     def check_alive(self, world):
         if self.health <= 0:
-            world.money += c.KILL_REWARD
+            world.money += self.money
             self.kill()
 
-    def feature(self):
-        match self.enemy_type:
-            case "weak":
-                self.weak_function()
-                print("plonie do konca i obrazenia ma x2")
-            case "medium":
-                print("You chose a banana.")
-            case "strong":
-                self.strong_function()
-                print("ma shield na poczatku")
-            case "elite":
-                print("Sorry, that fruit is not available.")
-            case "super":
-                print("super")
-            case "boss" :
-                print("boss")
+    # def feature(self):
+    #     match self.enemy_type:
+    #         case "weak":
+    #             self.weak_function()
+    #             print("plonie do konca i obrazenia ma x2")
+    #         case "medium":
+    #             print("You chose a banana.")
+    #         case "strong":
+    #             self.strong_function()
+    #             print("ma shield na poczatku")
+    #         case "elite":
+    #             print("Sorry, that fruit is not available.")
+    #         case "super":
+    #             print("super")
+    #         case "boss" :
+    #             print("boss")
     def strong_function(self):
         if self.shield:
             if self.health < self.max_health:
                 self.health=self.max_health
                 self.shield =False
-                self.original_image =self.original_image
-                self.image=self.original_image
+                self.original_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
+                self.image= pg.image.load("assets/enemies/e3.png").convert_alpha()
+                print("elo")
             else:
                 self.original_image =pg.image.load("assets/enemies/e3_shield.png").convert_alpha()
-                self.health=self.health-1
+
         else:
-            self.original_image = pg.image.load("assets/enemies/e3_shield.png").convert_alpha()
+            self.original_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 
         # Obróć obrazek i zaktualizuj prostokąt
         self.image = pg.transform.rotate(self.original_image, self.angle)
@@ -113,4 +115,8 @@ class Enemy(pg.sprite.Sprite):
             self.last_health=self.health
             self.image= pg.image.load("assets/enemies/e1_fire.png").convert_alpha()
 
-
+    def medium_function(self):
+        if self.health != self.last_health and self.speed -2 >0:
+            self.speed = self.speed -2
+            self.last_health=self.health
+            self.image= pg.image.load("assets/enemies/e2_slow.png").convert_alpha()

@@ -1,13 +1,9 @@
 import pygame as pg
 import json
-from enemy import Enemy
-from world import World
-from button import Button
+from buttons.button import Button
 import consts as c
 from runner import play
 
-from towers.tower import Tower
-from towers.tower_spot import TowerSpot
 pg.init()
 clock = pg.time.Clock()
 
@@ -16,11 +12,11 @@ screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL,c.SCREEN_HEIGTH))
 pg.display.set_caption("Tower Defense")
 run = True
 
-tower_sheet = pg.image.load("toweranimation.png").convert_alpha()
+tower_sheet = pg.image.load("buttons/toweranimation.png").convert_alpha()
 tower_image = pg.image.load("assets/towers/tower1.png").convert_alpha()
 #enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
-tower_button_img = pg.image.load("towerbutton.png").convert_alpha()
-cancel_button_img = pg.image.load("cancelbutton.png").convert_alpha()
+tower_button_img = pg.image.load("buttons/towerbutton.png").convert_alpha()
+cancel_button_img = pg.image.load("buttons/cancelbutton.png").convert_alpha()
 map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
 tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
 

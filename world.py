@@ -1,8 +1,5 @@
 import pygame as pg
-import os
-from towers.tower_spot import TowerSpot
-import pygame as pg
-from enemy_data import ENEMY_SPAWN_DATA
+from assets.enemies.enemy_data import ENEMY_SPAWN_DATA
 import random
 import consts as c
 

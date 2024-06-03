@@ -1,12 +1,12 @@
 ENEMY_SPAWN_DATA = [
   {
     #1
-    "weak": 15,
-    "medium": 0,
+    "weak": 0,
+    "medium": 20,
     "strong": 0,
     "elite": 0,
-    "super": 5,
-    "boss" : 5
+    "super": 0,
+    "boss" : 0
   },
   {
     #2
@@ -221,7 +221,64 @@ ENEMY_SPAWN_DATA = [
     "elite": 5,
     "super": 30,
     "boss" : 25
-  }
+  },
+{
+    #16
+    "weak": 0,
+    "medium": 5,
+    "strong": 5,
+    "elite": 10,
+    "super": 10,
+    "boss" : 10
+  },
+{
+    #17
+    "weak": 0,
+    "medium": 0,
+    "strong": 25,
+    "elite": 25,
+    "super": 20,
+    "boss" : 10
+  },
+{
+    #18
+    "weak": 0,
+    "medium": 0,
+    "strong": 5,
+    "elite": 5,
+    "super": 20,
+    "boss" : 20
+  },
+
+{
+    #19
+    "weak": 10,
+    "medium": 10,
+    "strong": 5,
+    "elite": 15,
+    "super": 20,
+    "boss" : 20
+  },
+
+{
+    #20
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 5,
+    "super": 30,
+    "boss" : 25
+  },
+
+{
+    #21
+    "weak": 1,
+    "medium": 1,
+    "strong": 15,
+    "elite": 35,
+    "super": 40,
+    "boss" : 25
+}
 
 ]
 
@@ -230,26 +287,32 @@ ENEMY_DATA = {
     "weak": {
     "health": 10,
     "speed": 2,
+    "money":10
   },
     "medium": {
     "health": 15,
-    "speed": 3
+    "speed": 3,
+        "money" :20
   },
     "strong": {
     "health": 20,
-    "speed": 4
+    "speed": 4,
+        "money":30
   },
     "elite": {
     "health": 30,
-    "speed": 6
+    "speed": 6,
+        "money":40
   }
 ,
     "super": {
     "health": 70,
-    "speed": 4
+    "speed": 4,
+        "money":50
   },
     "boss": {
     "health": 100,
-    "speed": 2
+    "speed": 2,
+        "money":60
   }
 }
