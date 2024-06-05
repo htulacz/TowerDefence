@@ -9,6 +9,7 @@ class Tower(pg.sprite.Sprite):
         self.maxlevel = 3
         self.range = TOWER_DATA[self.level].get("range")
         self.cooldown = TOWER_DATA[self.level].get("cooldown")
+        self.damage = TOWER_DATA[self.level].get("damage")
         self.last_shot = pg.time.get_ticks()
         self.sprite_sheet = sprite_sheet
         self.animation_list = self.load_images()
@@ -48,6 +49,8 @@ class Tower(pg.sprite.Sprite):
             if pg.time.get_ticks() - self.last_shot > self.cooldown:
                 if not self.pick_target(enemy_group):
                     self.frame_index = 0
+                else:
+                    self.shoot(enemy_group)
 
 
 
@@ -63,6 +66,11 @@ class Tower(pg.sprite.Sprite):
                 self.angle = m.degrees(m.atan2(-y_dist, x_dist))
                 return True
         return False
+
+    def shoot(self,enemy_group):
+        self.target.health -= self.damage
+        if self.target.health <= 0:
+            enemy_group.remove(self.target)
     def animate(self):
         self.original_image = self.animation_list[self.frame_index]
         if pg.time.get_ticks() - self.update_time > c.ANIMATION_DELAY:
@@ -73,7 +81,7 @@ class Tower(pg.sprite.Sprite):
         self.level += 1
         self.range = TOWER_DATA[self.level].get("range")
         self.cooldown = TOWER_DATA[self.level].get("cooldown")
-
+        self.damage = TOWER_DATA[self.level].get("damage")
 
         self.range_image = pg.Surface((self.range * 2, self.range * 2))
         self.range_image.fill('black')

@@ -8,7 +8,7 @@ from world import World
 from enemy import Enemy
 from buttons.button import Button
 from towers.archer_tower import ArcherTower
-# from towers.bomb_tower import BombTower
+from towers.bomb_tower import BombTower
 from towers.tower_spot import TowerSpot
 
 
@@ -96,7 +96,7 @@ def play():
     money_button = Button(c.SCREEN_WIDTH + 30, 400,
                                          money_button)  # **Przycisk Brutalnej Siły**
     def create_tower(click_pos):
-        tower = ArcherTower(click_pos, tower_sheet)
+        tower = BombTower(click_pos, tower_sheet)
         tower_group.add(tower)
 
     def check_for_spot(click_pos):

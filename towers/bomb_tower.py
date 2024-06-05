@@ -1,10 +1,11 @@
-from tower import Tower
+from towers.tower import Tower
 import pygame as pg
 import math as m
 class BombTower(Tower):
     def __init__(self, pos, sprite_sheet):
         super().__init__(pos, sprite_sheet)
         self.explosion_radii = 10
+        self.targets = []
 
     def pick_target(self, enemy_group):
         x_dist = 0
@@ -26,4 +27,9 @@ class BombTower(Tower):
                 if dist < self.range:
                     targets.append(enemy)
 
-        return targets
+            self.targets = targets
+    def shoot(self,enemy_group):
+        for target in self.targets:
+            target.health -= self.damage
+            if target.health <= 0:
+                enemy_group.remove(target)
