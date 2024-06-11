@@ -14,7 +14,7 @@ class BuffTower(Tower):
                 tower.cooldown //= 1.25
                 tower.range *= 1.25
 
-    def update(self,enemy_group):
+    def update(self, enemy_group):
         for tower in self.tower_group:
             x_dist = tower.x - self.x
             y_dist = tower.y - self.y
