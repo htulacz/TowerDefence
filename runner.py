@@ -8,10 +8,7 @@ from world import World
 from enemy import Enemy
 from buttons.button import Button
 from towers.archer_tower import ArcherTower
-from towers.bomb_tower import BombTower
-from towers.lava_tower import LavaTower
-from towers.buff_tower import BuffTower
-from towers.ice_tower import IceTower
+# from towers.bomb_tower import BombTower
 from towers.tower_spot import TowerSpot
 
 
@@ -84,7 +81,7 @@ def play():
     enemy_group = pg.sprite.Group()
     tower_group = pg.sprite.Group()
     spots_group = pg.sprite.Group()
-    bullet_group = pg.sprite.Group()
+
     with open("assets/towerspots/spots1.json") as file:
         tower_spots = json.load(file)
     for spot in tower_spots:
@@ -101,26 +98,6 @@ def play():
     def create_ArcherTower(click_pos):
         tower = ArcherTower(click_pos, tower_sheet)
         tower_group.add(tower)
-    def create_BombTower(click_pos):
-        tower = BombTower(click_pos, tower_sheet)
-        tower_group.add(tower)
-
-    def create_LavaTower(click_pos,tower_group):
-        tower = LavaTower(click_pos, tower_sheet,tower_group)
-        tower_group.add(tower)
-
-    def create_IceTower(click_pos):
-        tower = IceTower(click_pos, tower_sheet)
-        tower_group.add(tower)
-
-    def create_BuffTower(click_pos):
-        tower = BuffTower(click_pos, tower_sheet)
-        tower_group.add(tower)
-
-    def create_ArcherTower(click_pos):
-        tower = ArcherTower(click_pos, tower_sheet)
-        tower_group.add(tower)
-
 
     def check_for_spot(click_pos):
         for spot in spots_group:
@@ -171,11 +148,10 @@ def play():
             enemy_group.draw(screen)
             spots_group.draw(screen)
             enemy_group.update(world)
-            tower_group.update(enemy_group, bullet_group)
+            tower_group.update(enemy_group)
             for tower in tower_group:
                 tower.draw(screen)
-            bullet_group.update()
-            bullet_group.draw(screen)
+
 
 ## su
             for enemy in enemy_group:
@@ -345,7 +321,7 @@ def play():
                         selected_tower = None
                         clear_selection()
                         if placing_towers and actual_place:
-                            create_LavaTower(actual_place,tower_group)
+                            create_ArcherTower(actual_place)
                         else:
                             selected_tower = select_tower(click_pos)
 

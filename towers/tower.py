@@ -2,7 +2,6 @@ import pygame as pg
 import consts as c
 import math as m
 from towers.tower_data import TOWER_DATA
-from towers.bullet import Bullet
 class Tower(pg.sprite.Sprite):
     def __init__(self, pos, sprite_sheet):
         pg.sprite.Sprite.__init__(self)
@@ -43,7 +42,7 @@ class Tower(pg.sprite.Sprite):
             animation_list.append(temp)
         return animation_list
 
-    def update(self, enemy_group, bullet_group):
+    def update(self,enemy_group):
         if self.target:
             self.animate()
         else:
@@ -52,8 +51,6 @@ class Tower(pg.sprite.Sprite):
                     self.frame_index = 0
                 else:
                     self.shoot(enemy_group)
-                    bullet = Bullet((self.x, self.y), self.target.pos)
-                    bullet_group.add(bullet)
 
 
 
