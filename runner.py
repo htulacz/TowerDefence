@@ -8,7 +8,7 @@ from world import World
 from enemy import Enemy
 from buttons.button import Button
 from towers.archer_tower import ArcherTower
-# from towers.bomb_tower import BombTower
+from towers.bomb_tower import BombTower
 from towers.tower_spot import TowerSpot
 
 
@@ -95,8 +95,8 @@ def play():
                                          next_lvl_brute_force_img)  # **Przycisk Brutalnej Siły**
     money_button = Button(c.SCREEN_WIDTH + 30, 400,
                                          money_button)  # **Przycisk Brutalnej Siły**
-    def create_ArcherTower(click_pos):
-        tower = ArcherTower(click_pos, tower_sheet)
+    def create_tower(click_pos):
+        tower = BombTower(click_pos, tower_sheet)
         tower_group.add(tower)
 
     def check_for_spot(click_pos):
@@ -321,7 +321,7 @@ def play():
                         selected_tower = None
                         clear_selection()
                         if placing_towers and actual_place:
-                            create_ArcherTower(actual_place)
+                            create_tower(actual_place)
                         else:
                             selected_tower = select_tower(click_pos)
 
