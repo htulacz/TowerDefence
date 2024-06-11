@@ -10,7 +10,8 @@ from buttons.button import Button
 from towers.archer_tower import ArcherTower
 from towers.bomb_tower import BombTower
 from towers.tower_spot import TowerSpot
-
+from towers.ice_tower import IceTower
+from towers.lava_tower import LavaTower
 
 def play():
     pg.init()
@@ -81,6 +82,7 @@ def play():
     enemy_group = pg.sprite.Group()
     tower_group = pg.sprite.Group()
     spots_group = pg.sprite.Group()
+    bullet_group = pg.sprite.Group()
 
     with open("assets/towerspots/spots1.json") as file:
         tower_spots = json.load(file)
@@ -96,7 +98,7 @@ def play():
     money_button = Button(c.SCREEN_WIDTH + 30, 400,
                                          money_button)  # **Przycisk Brutalnej Siły**
     def create_tower(click_pos):
-        tower = BombTower(click_pos, tower_sheet)
+        tower = LavaTower(click_pos, tower_sheet, tower_group)
         tower_group.add(tower)
 
     def check_for_spot(click_pos):
@@ -148,10 +150,11 @@ def play():
             enemy_group.draw(screen)
             spots_group.draw(screen)
             enemy_group.update(world)
-            tower_group.update(enemy_group)
+            tower_group.update(enemy_group,bullet_group)
             for tower in tower_group:
                 tower.draw(screen)
-
+            bullet_group.draw(screen)
+            bullet_group.update()
 
 ## su
             for enemy in enemy_group:
