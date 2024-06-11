@@ -5,6 +5,8 @@ class BombTower(Tower):
     def __init__(self, pos, sprite_sheet):
         super().__init__(pos, sprite_sheet)
         self.explosion_radii = 10
+        self.range //= 2
+        self.cooldown *= 2
 
 
 

@@ -32,13 +32,13 @@ class Tower(pg.sprite.Sprite):
         self.range_image.set_alpha(50)
         self.range_rect = self.range_image.get_rect()
         self.range_rect.center = self.rect.center
-
+        self.buffed = False
         self.target = None
         self.selected = False
     def load_images(self):
         size = self.sprite_sheet.get_height()
         animation_list = []
-        for x in range(4):
+        for x in range(1):
             temp = self.sprite_sheet.subsurface(x * size, 0, size, size)
             animation_list.append(temp)
         return animation_list
@@ -78,7 +78,7 @@ class Tower(pg.sprite.Sprite):
         self.original_image = self.animation_list[self.frame_index]
         if pg.time.get_ticks() - self.update_time > c.ANIMATION_DELAY:
             self.update_time = pg.time.get_ticks()
-            self.frame_index = self.frame_index + 1 if self.frame_index + 1 < 4 else 0
+            self.frame_index = 0
             self.target = None
     def upgrade(self):
         self.level += 1

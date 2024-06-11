@@ -12,6 +12,7 @@ from towers.bomb_tower import BombTower
 from towers.tower_spot import TowerSpot
 from towers.ice_tower import IceTower
 from towers.lava_tower import LavaTower
+from towers.buff_tower import BuffTower
 
 def play():
     pg.init()
@@ -20,8 +21,11 @@ def play():
     screen = pg.display.set_mode((c.SCREEN_WIDTH + c.SIDE_PANEL, c.SCREEN_HEIGTH))
     pg.display.set_caption("Tower Defense")
 
-    tower_sheet = pg.image.load("buttons/toweranimation.png").convert_alpha()
-    tower_image = pg.image.load("assets/towers/tower1.png").convert_alpha()
+    Atower_image = pg.image.load("assets/towers/tower1.png").convert_alpha()
+    Btower_image = pg.image.load("assets/towers/tower2.png").convert_alpha()
+    Itower_image = pg.image.load("assets/towers/tower3.png").convert_alpha()
+    Ltower_image = pg.image.load("assets/towers/tower4.png").convert_alpha()
+    Butower_image = pg.image.load("assets/towers/tower5.png").convert_alpha()
     tower_button_img = pg.image.load("buttons/towerbutton.png").convert_alpha()
     cancel_button_img = pg.image.load("buttons/cancelbutton.png").convert_alpha()
     upgrade_button_img = pg.image.load("buttons/upgradebutton.png").convert_alpha()
@@ -76,7 +80,7 @@ def play():
             center=(button.rect.x + button.rect.width // 2, button.rect.y + button.rect.height // 2))
         screen.blit(text_img, text_rect)
 
-    placing_towers = False
+    placing_towers = 0
     selected_tower = None
 
     enemy_group = pg.sprite.Group()
@@ -89,16 +93,34 @@ def play():
     for spot in tower_spots:
         spots_group.add(TowerSpot(spot, tower_spot_image))
 
-    tower_button = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
+    tower_button1 = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
+    tower_button2 = Button(c.SCREEN_WIDTH + 30, 170, tower_button_img)
+    tower_button3 = Button(c.SCREEN_WIDTH + 30, 220, tower_button_img)
+    tower_button4 = Button(c.SCREEN_WIDTH + 30, 270, tower_button_img)
+    tower_button5 = Button(c.SCREEN_WIDTH + 30, 320, tower_button_img)
     cancel_button = Button(c.SCREEN_WIDTH + 160, 120, cancel_button_img)
-    upgrade_button = Button(c.SCREEN_WIDTH + 30, 160, upgrade_button_img)
-    next_level_button = Button(c.SCREEN_WIDTH + 30, 180, next_lvl_image)  # **Nowy przycisk**
-    next_lvl_brute_force_button = Button(c.SCREEN_WIDTH + 30, 300,
+    upgrade_button = Button(c.SCREEN_WIDTH + 30, 70, upgrade_button_img)
+    next_level_button = Button(c.SCREEN_WIDTH + 30, 400, next_lvl_image)  # **Nowy przycisk**
+    next_lvl_brute_force_button = Button(c.SCREEN_WIDTH + 30, 500,
                                          next_lvl_brute_force_img)  # **Przycisk Brutalnej Siły**
-    money_button = Button(c.SCREEN_WIDTH + 30, 400,
+    money_button = Button(c.SCREEN_WIDTH + 30, 600,
                                          money_button)  # **Przycisk Brutalnej Siły**
-    def create_tower(click_pos):
-        tower = LavaTower(click_pos, tower_sheet, tower_group)
+    def create_LavaTower(click_pos):
+        tower = LavaTower(click_pos, Ltower_image, tower_group)
+        tower_group.add(tower)
+    def create_ArcherTower(click_pos):
+        tower = ArcherTower(click_pos, Atower_image)
+        tower_group.add(tower)
+    def create_BombTower(click_pos):
+        tower = BombTower(click_pos, Btower_image)
+        tower_group.add(tower)
+
+    def create_IceTower(click_pos):
+        tower = IceTower(click_pos, Itower_image)
+        tower_group.add(tower)
+
+    def create_BuffTower(click_pos):
+        tower = BuffTower(click_pos, Butower_image, tower_group)
         tower_group.add(tower)
 
     def check_for_spot(click_pos):
@@ -300,9 +322,28 @@ def play():
                         money=False
                     draw_next_button_text(next_level_button, "Next Level", text_font, "black")
 
-            if tower_button.draw(screen):
-                placing_towers = True
+            if tower_button1.draw(screen):
+                placing_towers = 1
+            if tower_button2.draw(screen):
+                placing_towers = 2
+            if tower_button3.draw(screen):
+                placing_towers = 3
+            if tower_button4.draw(screen):
+                placing_towers = 4
+            if tower_button5.draw(screen):
+                placing_towers = 5
             if placing_towers:
+                if placing_towers == 1:
+                    tower_image = Atower_image
+                elif placing_towers == 2:
+                    tower_image = Btower_image
+                elif placing_towers == 3:
+                    tower_image = Itower_image
+                elif placing_towers == 4:
+                    tower_image = Ltower_image
+                else:
+                    tower_image = Butower_image
+
                 hover_rect = tower_image.get_rect()
                 hover_pos = pg.mouse.get_pos()
                 hover_rect.center = hover_pos
@@ -324,7 +365,16 @@ def play():
                         selected_tower = None
                         clear_selection()
                         if placing_towers and actual_place:
-                            create_tower(actual_place)
+                            if placing_towers == 1:
+                                create_ArcherTower(actual_place)
+                            elif placing_towers == 2:
+                                create_BombTower(actual_place)
+                            elif placing_towers == 3:
+                                create_IceTower(actual_place)
+                            elif placing_towers == 4:
+                                create_LavaTower(actual_place)
+                            else:
+                                create_BuffTower(actual_place)
                         else:
                             selected_tower = select_tower(click_pos)
 
