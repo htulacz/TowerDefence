@@ -1,4 +1,4 @@
-from tower import Tower
+from towers.tower import Tower
 import pygame as pg
 class ArcherTower(Tower):
     def __init__(self, pos, sprite_sheet):
