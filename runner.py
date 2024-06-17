@@ -145,7 +145,7 @@ def play():
         for tower in tower_group:
             tower.selected = False
 
-    def shadows_spawner(enemy, x):
+    def shadows_spawner(enemy, x,enemy_group):
         if enemy.health != enemy.last_health and not enemy.is_shadow:
             shadow = Enemy("super", enemy.waypoints, enemy_images, images_features)
             shadow.waypoints = enemy.waypoints
@@ -154,6 +154,9 @@ def play():
             shadow.health = x * enemy.health
             shadow.is_shadow = True
             enemy.last_health = enemy.health
+            print("elo")
+            enemy_group.add(shadow)
+        return enemy_group
 
     def runner():
         nonlocal run
@@ -224,15 +227,20 @@ def play():
                         case "elite":
                             continue
                         case "super":
-                            shadows_spawner(enemy,0.1)
+                            shadows_spawner(enemy,0.1,enemy_group)
                            # print("jak zostanie trafiony to tworza sie jego cienie z 10% zdrowia")
                         case "boss":
-                            shadows_spawner(enemy,0.3)
+                            shadows_spawner(enemy,0.3,enemy_group)
                         # print("jak zostanie trafiony to tworza sie jego cienie z 30% zdrowia")
 
                 if(shadow is not None):
                     enemy_group.add(shadow)
                     shadow = None
+
+                # for enemy in enemy_group:
+                #     print(enemy.enemy_type)
+                # print("\n \n \n" )
+
 
 
             draw_text("health:", text_font, "grey100", 0, 0)
