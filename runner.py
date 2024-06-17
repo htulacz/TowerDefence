@@ -227,10 +227,10 @@ def play():
                         case "elite":
                             continue
                         case "super":
-                            shadows_spawner(enemy,0.3,enemy_group)
+                            shadows_spawner(enemy,0.1,enemy_group)
                            # print("jak zostanie trafiony to tworza sie jego cienie z 10% zdrowia")
                         case "boss":
-                            shadows_spawner(enemy,0.5,enemy_group)
+                            shadows_spawner(enemy,0.3,enemy_group)
                         # print("jak zostanie trafiony to tworza sie jego cienie z 30% zdrowia")
 
                 if(shadow is not None):
