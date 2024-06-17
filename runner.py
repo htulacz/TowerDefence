@@ -181,7 +181,6 @@ def play():
             bullet_group.draw(screen)
             bullet_group.update()
 
-## su
             for enemy in enemy_group:
                 if(enemy.health - 0.1 >0) and random.randint(0, 1000) == 0:
                     enemy.health=enemy.health-0.1
@@ -198,7 +197,7 @@ def play():
                             enemy.money = enemy.money * 2
                         case "strong":
                             enemy.image = pg.image.load("assets/enemies/e3_cash.png").convert_alpha()
-                            #enemy.orginal_image =pg.image.load("assets/enemies/e3_cash.png").convert_alpha()
+
                             enemy.money = enemy.money * 2
                         case "elite":
                             enemy.image = pg.image.load("assets/enemies/e4_cash.png").convert_alpha()
@@ -209,39 +208,32 @@ def play():
                         case "boss":
                             enemy.image = pg.image.load("assets/enemies/e6_cash.png").convert_alpha()
                             enemy.money = enemy.money * 2
-##### tu chyba maja byc fetury enemies
-            #shadow = Enemy("super", enemy.waypoints, enemy_images, images_features)
+
             shadow=None
             if not money:
                 for enemy in enemy_group:
                     match enemy.enemy_type:
                         case "weak":
                             enemy.weak_function()
-                            #print("plonie do konca i obrazenia ma x2")
+
                         case "medium":
                             enemy.medium_function()
-                            # jak zostana trafione to zwalniaja
+
                         case "strong":
                             enemy.strong_function()
-                            #print("ma shield na poczatku ++")
+
                         case "elite":
                             continue
                         case "super":
                             shadows_spawner(enemy,0.1,enemy_group)
-                           # print("jak zostanie trafiony to tworza sie jego cienie z 10% zdrowia")
+
                         case "boss":
                             shadows_spawner(enemy,0.3,enemy_group)
-                        # print("jak zostanie trafiony to tworza sie jego cienie z 30% zdrowia")
+
 
                 if(shadow is not None):
                     enemy_group.add(shadow)
                     shadow = None
-
-                # for enemy in enemy_group:
-                #     print(enemy.enemy_type)
-                # print("\n \n \n" )
-
-
 
             draw_text("health:", text_font, "grey100", 0, 0)
             draw_text(str(world.health), text_font, "grey100", 0, 30)
