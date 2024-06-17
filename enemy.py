@@ -75,22 +75,7 @@ class Enemy(pg.sprite.Sprite):
             world.money += self.money
             self.kill()
 
-    # def feature(self):
-    #     match self.enemy_type:
-    #         case "weak":
-    #             self.weak_function()
-    #             print("plonie do konca i obrazenia ma x2")
-    #         case "medium":
-    #             print("You chose a banana.")
-    #         case "strong":
-    #             self.strong_function()
-    #             print("ma shield na poczatku")
-    #         case "elite":
-    #             print("Sorry, that fruit is not available.")
-    #         case "super":
-    #             print("super")
-    #         case "boss" :
-    #             print("boss")
+
     def strong_function(self):
         if self.shield:
             if self.health < self.max_health:

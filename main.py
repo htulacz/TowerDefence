@@ -14,15 +14,14 @@ run = True
 
 tower_sheet = pg.image.load("buttons/toweranimation.png").convert_alpha()
 tower_image = pg.image.load("assets/towers/tower1.png").convert_alpha()
-#enemy_image = pg.image.load("assets/enemies/e3.png").convert_alpha()
 tower_button_img = pg.image.load("buttons/towerbutton.png").convert_alpha()
 cancel_button_img = pg.image.load("buttons/cancelbutton.png").convert_alpha()
 map_image = pg.image.load("assets/maps/map1.png").convert_alpha()
 tower_spot_image = pg.image.load("assets/towerspot.png").convert_alpha()
 
-# world.process_enemies()
+
 level_started=False
-#last_enemy_spawn = pg.time.get_ticks()
+
 placing_towers = False
 selected_towers = None
 
@@ -40,14 +39,11 @@ leaderboard_is_open = False
 scoreboard_surface = None
 level=1
 while run:
-    # world = World(world_data, map_images)
-    # world.level=level
-    # world.process_data()
-    # world.process_enemies()
+
     clock.tick(c.FPS)
     screen.fill("grey100")
     if not leaderboard_is_open and start_button.draw(screen):
-        ############################################################
+
         play()
     if not leaderboard_is_open and leaderboard_button.draw(screen):
         leaderboard_is_open = True
