@@ -11,7 +11,7 @@ class Lava(Tower):
         self.y = pos[1]
         self.time = time
         self.size = 15
-        self.damage = 5
+        self.damage = 0.1
 
     def shoot(self, enemy_group):
         for enemy in enemy_group:

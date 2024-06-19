@@ -80,6 +80,11 @@ def play():
             center=(button.rect.x + button.rect.width // 2, button.rect.y + button.rect.height // 2))
         screen.blit(text_img, text_rect)
 
+    def create_tower_spots(map_number):
+        with open(f"assets/towerspots/spots{map_number}.json") as file:
+            tower_spots = json.load(file)
+        for spot in tower_spots:
+            spots_group.add(TowerSpot(spot, tower_spot_image))
     placing_towers = 0
     selected_tower = None
 
@@ -88,10 +93,7 @@ def play():
     spots_group = pg.sprite.Group()
     bullet_group = pg.sprite.Group()
 
-    with open("assets/towerspots/spots1.json") as file:
-        tower_spots = json.load(file)
-    for spot in tower_spots:
-        spots_group.add(TowerSpot(spot, tower_spot_image))
+    create_tower_spots(1)
 
     tower_button1 = Button(c.SCREEN_WIDTH + 30, 120, tower_button_img)
     tower_button2 = Button(c.SCREEN_WIDTH + 30, 170, tower_button_img)
@@ -112,7 +114,7 @@ def play():
         tower = ArcherTower(click_pos, Atower_image)
         tower_group.add(tower)
     def create_BombTower(click_pos):
-        tower = BombTower(click_pos, Btower_image)
+        tower = BombTower(click_pos, Btower_image, screen)
         tower_group.add(tower)
 
     def create_IceTower(click_pos):
@@ -181,7 +183,7 @@ def play():
 ## su
             for enemy in enemy_group:
                 if(enemy.health - 0.1 >0) and random.randint(0, 1000) == 0:
-                    enemy.health=enemy.health-0.1
+                    enemy.health=enemy.health-0.3
 
             if(money) and money_count <100:
                 money_count=money_count+1
@@ -306,7 +308,10 @@ def play():
                     world.level += 1
                     world.enemy_list = []
                     if world.level % 6 == 1:
+                        tower_group.empty()
                         current_map = (world.level - 1) // 6 + 1
+                        spots_group.empty()
+                        create_tower_spots(current_map)
                     money_count =0
                     if(current_map != 5):
                         with open(f"assets/points/points{current_map}.tmj") as file:

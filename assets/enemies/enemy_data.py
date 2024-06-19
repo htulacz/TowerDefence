@@ -6,7 +6,7 @@ ENEMY_SPAWN_DATA = [
     "strong": 0,
     "elite": 0,
     "super": 0,
-    "boss" : 0
+    "boss" : 5
   },
   {
     #2

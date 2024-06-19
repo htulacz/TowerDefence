@@ -7,7 +7,7 @@ class LavaTower(Tower):
         super().__init__(pos, sprite_sheet)
         self.lava_image = pg.image.load("assets/towers/lava.png")
         self.tg = tower_group
-        self
+
 
 
     def shoot(self,enemy_group):

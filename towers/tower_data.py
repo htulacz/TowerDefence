@@ -1,25 +1,25 @@
 TOWER_DATA = [
     {
-        "range" : 90,
-        "cooldown" : 1500,
-        "damage" : 2
-    },
-
-    {
-        "range" : 100,
-        "cooldown" : 1400,
-        "damage" : 4
-    },
-
-    {
-        "range" : 110,
-        "cooldown" : 1300,
-        "damage" : 8
-    },
-
-    {
-        "range" : 120,
-        "cooldown" : 1200,
+        "range" : 125,
+        "cooldown" : 700,
         "damage" : 12
+    },
+
+    {
+        "range" : 150,
+        "cooldown" : 600,
+        "damage" : 24
+    },
+
+    {
+        "range" : 175,
+        "cooldown" : 500,
+        "damage" : 36
+    },
+
+    {
+        "range" : 200,
+        "cooldown" : 400,
+        "damage" : 48
     },
 ]

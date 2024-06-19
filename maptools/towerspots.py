@@ -5,7 +5,7 @@ import consts as c
 pg.init()
 
 
-image_path = "../assets/maps/map1.png"
+image_path = "../assets/maps/map5.png"
 image = pg.image.load(image_path)
 
 screen = pg.display.set_mode((c.SCREEN_WIDTH, c.SCREEN_HEIGTH))
@@ -26,7 +26,7 @@ while running:
 
     pg.display.flip()
 
-with open("../assets/towerspots/spots1.json", "w") as file:
+with open("../assets/towerspots/spots5.json", "w") as file:
     json.dump(click_coordinates, file)
 
 pg.quit()

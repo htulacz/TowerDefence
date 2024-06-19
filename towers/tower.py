@@ -23,7 +23,7 @@ class Tower(pg.sprite.Sprite):
         self.update_time = pg.time.get_ticks()
         self.x = pos[0]
         self.y = pos[1]
-
+        self.timer = pg.time.get_ticks()
 
         self.range_image = pg.Surface((self.range * 2, self.range * 2))
         self.range_image.fill('black')
@@ -56,6 +56,7 @@ class Tower(pg.sprite.Sprite):
             self.animate()
         else:
             if pg.time.get_ticks() - self.last_shot > self.cooldown:
+                self.last_shot = pg.time.get_ticks()
                 if not self.pick_target(enemy_group):
                     self.frame_index = 0
                 else:
